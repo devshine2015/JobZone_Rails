@@ -32,6 +32,10 @@ gem 'jbuilder', '~> 2.5'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+# Use Devise for authentication
+gem 'devise', '~> 4.2'
+gem 'cancancan', '~> 1.15'
+gem 'rolify', '~> 5.1'
 gem 'bower-rails'
 gem 'sass', '~> 3.4', '>= 3.4.22'
 group :development, :test do
