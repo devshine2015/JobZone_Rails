@@ -39,6 +39,12 @@ gem 'jbuilder', '~> 2.5'
 gem 'bower-rails'
 gem 'sass', '~> 3.4', '>= 3.4.22'
 
+gem 'activeadmin'
+
+# Plus integrations with:
+gem 'cancan' # or cancancan
+gem 'draper'
+gem 'pundit'
 # Use Devise for authentication
 gem 'devise', '~> 4.2'
 # Use Omniauth Facebook plugin
