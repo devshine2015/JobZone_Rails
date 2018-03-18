@@ -12,7 +12,7 @@ ActiveAdmin.register User do
 #   permitted
 # end
 
-  permit_params :email, :phone, :password, :password_confirmation, :approved
+  permit_params :email, :phone, :password, :password_confirmation, :approved, :role_id
 
   filter :email_contains
   filter :phone_contains
@@ -22,8 +22,13 @@ ActiveAdmin.register User do
     attributes_table do
       row :email
       row :phone
+      row "Role" do |user|
+        role = User::ROLES.key(user.role_id)
+        role.capitalize if role
+      end
       row :provider
       row :approved
+      row :role_id
       row :sign_in_count
       row :last_sign_in_at
       row :created_at
@@ -35,6 +40,11 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :phone
+    # column :role_id, as: User::ROLES.key(role_id)
+    column "Role" do |user|
+      role = User::ROLES.key(user.role_id)
+      role.capitalize if role
+    end
     column :provider
     column :approved
     column :sign_in_count
@@ -49,6 +59,7 @@ ActiveAdmin.register User do
     f.inputs 'User' do
       f.input :email
       f.input :phone
+      f.input :role_id, as: :select, collection: User::ROLES, include_blank: false
       f.input :password
       f.input :password_confirmation
       f.input :approved

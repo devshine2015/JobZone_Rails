@@ -1,7 +1,13 @@
 <div class="container-fluid">
   <div class="panel panel-success">
     <div class="panel-heading">
-      <h1 ng-if="name">Hello</h1>
+      <% if user_signed_in? %>
+          <% if current_user.role_id == User::ROLES[:employee] %>
+              <h1 ng-if="name">Welcome to Employees portal</h1>
+          <% else %>
+              <h1 ng-if="name">Welcome to Employer's portal</h1>
+          <%end%>
+      <% end %>
     </div>
     <div class="panel-body">
       <% if user_signed_in? %>
