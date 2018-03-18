@@ -3,15 +3,14 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  validates :email, :uniqueness => {:allow_blank => true}
 
-  validates :phone,presence: true,
-            uniqueness: { case_sensitive: false },
-            numericality: true,
-            length: { :minimum => 10, :maximum => 15 }
+  validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
+
+  validates :phone, presence: true, uniqueness: { case_sensitive: false, :allow_blank => true}, numericality: true,
+            length: { :minimum => 10, :maximum => 15 }, unless: :social_account?
 
   devise  :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable, :lockable, :timeoutable,
+          :recoverable, :rememberable, :trackable, :validatable, :timeoutable,
           :omniauthable, omniauth_providers: [:facebook, :google_oauth2],  :authentication_keys => [:phone]
 
   def self.create_from_provider_data(provider_data)
@@ -25,9 +24,14 @@ class User < ApplicationRecord
     false
   end
 
-  # use this instead of email_changed? for rails >= 5.1
   def will_save_change_to_email?
     false
+  end
+
+  private
+
+  def social_account?
+    provider.present?
   end
 
 end
