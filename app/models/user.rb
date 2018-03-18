@@ -28,6 +28,22 @@ class User < ApplicationRecord
     false
   end
 
+  def active_for_authentication?
+    super && approved?
+  end
+
+  def inactive_message
+    if !approved?
+      :not_approved
+    else
+      super # Use whatever other message
+    end
+  end
+
+  def toggle_status!
+    update_column(:approved, !approved)
+  end
+
   private
 
   def social_account?
