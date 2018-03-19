@@ -4,12 +4,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
 
-  validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
+  validates :email, presence: true, unless: :social_account?
+
+  validates :email, uniqueness: {allow_blank: true}, if: :social_account?
 
   validates :phone, presence: true, uniqueness: { case_sensitive: false, :allow_blank => true}, numericality: true,
             length: { :minimum => 10, :maximum => 15 }, unless: :social_account?
 
-  devise  :database_authenticatable, :registerable,
+  devise  :database_authenticatable, :registerable, :confirmable,
           :recoverable, :rememberable, :trackable, :validatable, :timeoutable,
           :omniauthable, omniauth_providers: [:facebook, :google_oauth2],  :authentication_keys => [:phone]
 
