@@ -12,7 +12,7 @@ ActiveAdmin.register User do
 #   permitted
 # end
 
-  permit_params :email, :phone, :password, :password_confirmation, :approved, :role_id
+  permit_params :email, :phone, :password, :password_confirmation, :is_verified, :role_id
 
   filter :email_contains
   filter :phone_contains
@@ -27,7 +27,7 @@ ActiveAdmin.register User do
         role.capitalize if role
       end
       row :provider
-      row :approved
+      row :is_verified
       row :role_id
       row :sign_in_count
       row :last_sign_in_at
@@ -46,12 +46,12 @@ ActiveAdmin.register User do
       role.capitalize if role
     end
     column :provider
-    column :approved
+    column :is_verified
     column :sign_in_count
     column :last_sign_in_at
     column :created_at
     actions defaults: true do |user|
-      link_to "#{user.approved ? 'Reject' : 'Approve'}",toggle_status_admin_user_path(user), method: :put
+      link_to "#{user.is_verified ? 'Reject' : 'Approve'}",toggle_status_admin_user_path(user), method: :put
     end
   end
 
@@ -62,14 +62,14 @@ ActiveAdmin.register User do
       f.input :role_id, as: :select, collection: User::ROLES, include_blank: false
       f.input :password
       f.input :password_confirmation
-      f.input :approved
+      f.input :is_verified
     end
     f.actions
   end
 
   member_action :toggle_status, method: :put do
     resource.toggle_status!
-    redirect_to admin_user_path(resource), notice: "Approved!"
+    redirect_to admin_user_path(resource), notice: "is_verified!"
   end
 
   # actions defaults: true do |user|

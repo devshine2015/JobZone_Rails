@@ -47,6 +47,8 @@ gem 'draper'
 gem 'pundit'
 # Use Devise for authentication
 gem 'devise', '~> 4.2'
+gem 'twilio-ruby', '~> 5.7.2'
+gem 'phonelib'
 # Use Omniauth Facebook plugin
 gem 'omniauth-facebook', '~> 4.0'
 # Use Omniauth Google plugin
@@ -54,7 +56,7 @@ gem 'omniauth-google-oauth2', '~> 0.4.1'
 # Use ActiveRecord Sessions
 gem 'activerecord-session_store', '~> 1.0'
 
-
+gem 'devise-token_authenticatable'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
