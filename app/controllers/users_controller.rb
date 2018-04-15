@@ -17,10 +17,9 @@ class UsersController < ApplicationController
         format.json  { render json: current_user.as_json, status: 200 }
       end
     else
-      flash[:alert] = @home_page_setting.errors.full_messages.first
       respond_to do |format|
-        format.html { redirect_to edit_user_registration_path(setting: 'back_ground_image') }
-        format.json  {render json: { error: @home_page_setting.errors.full_messages.join(',')}}
+        format.html { redirect_to edit_user_registration_path(current_user) }
+        format.json  {render json: { errors: current_user.errors}}
       end
     end
   end
