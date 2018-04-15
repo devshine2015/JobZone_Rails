@@ -27,6 +27,15 @@ class User < ApplicationRecord
     end
   end
 
+  # Resets reset password token and send reset password instructions by email.
+  # Returns the token sent in the e-mail.
+  def send_reset_password_instructions
+    token = set_reset_password_token
+    send_reset_password_instructions_notification(token) if email.present?
+    send_reset_password_instructions_message(token) if phone.present?
+    token
+  end
+
   def email_required?
     false
   end
@@ -56,7 +65,7 @@ class User < ApplicationRecord
   end
 
   def as_json(options = nil)
-    super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token]}.merge(options || {}))
+    super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token, :local]}.merge(options || {}))
   end
 
   private
@@ -69,6 +78,20 @@ class User < ApplicationRecord
           from: ENV['TWILIO_PHONE_NUMBER'],
           to: self.phone,
           body: "Your verification code is #{self.verification_code}."
+      )
+    rescue Exception => e
+      self.errors.add(:base, e.message)
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
+  end
+
+  def send_reset_password_instructions_message(token)
+    begin
+      @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
+      @twilio_client.api.account.messages.create(
+          from: ENV['TWILIO_PHONE_NUMBER'],
+          to: self.phone,
+          body: "Change my password: "+"http://localhost:3000/users/password/edit?reset_password_token=#{token}",
       )
     rescue Exception => e
       self.errors.add(:base, e.message)

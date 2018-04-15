@@ -29,6 +29,6 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
-  welcome_employee: "Welcome to Employees portal"
-  welcome_employer: "Welcome to Employer's portal"
+fr:
+  welcome_employee: "Bienvenue sur le portail de l'employeur"
+  welcome_employer: "Bienvenue sur le portail des employés"

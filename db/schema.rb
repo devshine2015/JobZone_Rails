@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20180410210744) do
     t.string "verification_code"
     t.text "authentication_token"
     t.datetime "authentication_token_created_at"
-    t.integer "local"
+    t.string "local"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["is_verified"], name: "index_users_on_is_verified"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -3,9 +3,9 @@
     <div class="panel-heading">
       <% if user_signed_in? %>
           <% if current_user.role_id == User::ROLES[:employee] %>
-              <h1 ng-if="name">Welcome to Employees portal</h1>
+              <h1 ng-if="name"><%= t :welcome_employee%></h1>
           <% else %>
-              <h1 ng-if="name">Welcome to Employer's portal</h1>
+              <h1 ng-if="name"><%= t :welcome_employer%></h1>
           <%end%>
       <% end %>
     </div>
@@ -21,4 +21,7 @@
       <% end %>
     </div>
   </div>
+  <%= form_tag((user_update_language_path(current_user)), {:method => :put}) do %>
+      <%= select_tag :new_locale, options_for_select(I18n.available_locales, I18n.locale), :onchange => "this.form.submit();" %>
+  <% end %>
 </div>

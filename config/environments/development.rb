@@ -66,7 +66,7 @@ Rails.application.configure do
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: ENV['USERNAME'],
-      password: ENV['PASSWORD'],
+      password: '1r55Uc!27hg6',
       ssl: true
   }
 

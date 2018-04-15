@@ -5,15 +5,18 @@ class ApplicationController < ActionController::Base
   respond_to :html, :json
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  before_action :set_locale # get locale directly from the user model
+  before_action :set_locale, if: Proc.new { |c| c.request.format != 'application/json' }
+
+
+  def authenticate_api_user!
+    id = params[:user_id] || params[:id]
+    @current_user = User.where(id: id, authentication_token: request.headers['HTTP_AUTHENTICATION_TOKEN']).first
+    I18n.locale = (@current_user .local || I18n.default_locale) if @current_user
+    render json: {success: false, message: "User not found! invalid ID or Authentication Token"}, status: 401 unless @current_user
+  end
 
   def set_locale
-    user_language = User::LANGUAGES.key(current_user.local)
-    if user_language
-      I18n.locale = user_signed_in? ? User::LANGUAGES.key(current_user.local).to_sym : I18n.default_locale
-    else
-      I18n.locale = I18n.default_locale
-    end
+      I18n.locale = (current_user.local || I18n.default_locale) if user_signed_in?
   end
   protected
 
