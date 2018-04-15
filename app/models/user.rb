@@ -4,6 +4,9 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
   # validates :role_id, presence: true
+  has_many :employee_jobs, foreign_key: 'employee_id'
+  has_many :searches
+
   validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
 
   validates :phone, presence: true, uniqueness: { case_sensitive: false, :allow_blank => true}, numericality: true,

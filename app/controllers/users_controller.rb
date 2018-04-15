@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       current_user.save
       render json: {success: true, message: "Succcessfully verified."}, status: 200
     else
-      render json: {success: false, message: "Invalid verification code."},status: 401
+      render json: {success: false, message: "Invalid verification code."}, status: 401
     end
   end
 

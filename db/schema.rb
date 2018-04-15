@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180410210744) do
+ActiveRecord::Schema.define(version: 20180415212147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,45 @@ ActiveRecord::Schema.define(version: 20180410210744) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "companies", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_companies_on_user_id"
+  end
+
+  create_table "employee_jobs", force: :cascade do |t|
+    t.integer "status_id", default: 1
+    t.integer "employee_id"
+    t.bigint "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_employee_jobs_on_job_id"
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "title"
+    t.string "location"
+    t.integer "status_id"
+    t.text "description"
+    t.bigint "user_id"
+    t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_jobs_on_company_id"
+    t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
+  create_table "searches", force: :cascade do |t|
+    t.text "search"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_searches_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
@@ -54,6 +93,14 @@ ActiveRecord::Schema.define(version: 20180410210744) do
     t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "user_searches", force: :cascade do |t|
+    t.text "search"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_searches_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -87,4 +134,10 @@ ActiveRecord::Schema.define(version: 20180410210744) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "companies", "users"
+  add_foreign_key "employee_jobs", "jobs"
+  add_foreign_key "jobs", "companies"
+  add_foreign_key "jobs", "users"
+  add_foreign_key "searches", "users"
+  add_foreign_key "user_searches", "users"
 end
