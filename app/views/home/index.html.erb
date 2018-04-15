@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <% if user_signed_in? %>
+          <% if current_user.role_id == User::ROLES[:employee] %>
+              <h1 ng-if="name"><%= t :welcome_employee%></h1>
+          <% else %>
+              <h1 ng-if="name"><%= t :welcome_employer%></h1>
+          <%end%>
+      <% end %>
+    </div>
+    <div class="panel-body">
+      <% if user_signed_in? %>
+          <li>
+            <%= link_to('Logout', destroy_user_session_path, method: :delete) %>
+          </li>
+      <% else %>
+          <li>
+            <%= link_to('Login', new_user_session_path)  %>
+          </li>
+      <% end %>
+    </div>
+  </div>
+  <%= form_tag((user_update_language_path(current_user)), {:method => :put}) do %>
+      <%= select_tag :new_locale, options_for_select(I18n.available_locales, I18n.locale), :onchange => "this.form.submit();" %>
+  <% end %>
+</div>
