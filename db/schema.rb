@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180415212147) do
+ActiveRecord::Schema.define(version: 20180416212607) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,21 +65,34 @@ ActiveRecord::Schema.define(version: 20180415212147) do
     t.index ["job_id"], name: "index_employee_jobs_on_job_id"
   end
 
+  create_table "job_skills", force: :cascade do |t|
+    t.bigint "job_id"
+    t.bigint "skill_id"
+    t.integer "years"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_job_skills_on_job_id"
+    t.index ["skill_id"], name: "index_job_skills_on_skill_id"
+  end
+
   create_table "jobs", force: :cascade do |t|
     t.string "title"
-    t.string "location"
+    t.string "address"
     t.integer "status_id"
     t.text "description"
     t.bigint "user_id"
     t.bigint "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "city"
+    t.string "country"
     t.index ["company_id"], name: "index_jobs_on_company_id"
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
 
   create_table "searches", force: :cascade do |t|
-    t.text "search"
+    t.text "key"
+    t.string "city"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -95,12 +108,29 @@ ActiveRecord::Schema.define(version: 20180415212147) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "skills", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_searches", force: :cascade do |t|
     t.text "search"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_user_searches_on_user_id"
+  end
+
+  create_table "user_skills", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "skill_id"
+    t.decimal "percentage"
+    t.integer "years"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["skill_id"], name: "index_user_skills_on_skill_id"
+    t.index ["user_id"], name: "index_user_skills_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -136,8 +166,12 @@ ActiveRecord::Schema.define(version: 20180415212147) do
 
   add_foreign_key "companies", "users"
   add_foreign_key "employee_jobs", "jobs"
+  add_foreign_key "job_skills", "jobs"
+  add_foreign_key "job_skills", "skills"
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users"
   add_foreign_key "searches", "users"
   add_foreign_key "user_searches", "users"
+  add_foreign_key "user_skills", "skills"
+  add_foreign_key "user_skills", "users"
 end

@@ -11,7 +11,8 @@ class JobsController < InheritedResources::Base
   end
 
   def index
-    @jobs = Job.search(params[:search], params[:page])
+    @search = {key: params[:key], city: params[:city]}
+    @jobs = Job.search(@search, params[:page])
     render json: @jobs.as_json
   end
 
@@ -41,7 +42,7 @@ class JobsController < InheritedResources::Base
     end
 
     def create_employee_searches
-      current_user.searches.create(search: params[:search]) if params[:search].present?
+      current_user.searches.create(@search) if @search[:key].present?
     end
 end
 
