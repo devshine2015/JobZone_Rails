@@ -5,9 +5,12 @@ class User < ApplicationRecord
 
   # validates :role_id, presence: true
   has_many :employee_jobs, foreign_key: 'employee_id'
-  has_many :searches
-  has_many :user_skills
-  has_many :skills, through: :user_skills
+  has_many :searches, dependent: :destroy
+  has_many :skills, as: :skillable
+  has_many :job_views, dependent: :destroy
+
+  accepts_nested_attributes_for :skills, allow_destroy: true
+
 
   validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
 

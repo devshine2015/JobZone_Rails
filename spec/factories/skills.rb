@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :skill do
-    title "MyString"
+    name "MyString"
+    years "9.99"
+    skillable nil
   end
 end

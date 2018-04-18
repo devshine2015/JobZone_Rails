@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!, if: Proc.new { |c| c.request.format != 'application/json' }
   before_action :authenticate_api_user!, if: Proc.new { |c| c.request.format == 'application/json' }
   before_action :check_verification, only: :verify
+  # before_action :create_skils, only: [:update]
 
   def show
     respond_to do |format|
@@ -43,6 +44,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def deactivate
+    if current_user.update_attribute(:is_verified, false)
+      render json: {success: true, message: "Succcessfully deactivated."}, status: 200
+    else
+      format.json  {render json: { errors: current_user.errors}}
+    end
+  end
+
   private
 
   def check_verification
@@ -50,6 +59,10 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params[:user].permit(:email, :phone, :role_id, :local)
+    params.require(:user).permit(:email, :phone, :role_id, :city, skills_attributes: [:id, :name, :_destroy])
   end
+
+  # def user_params
+  #   params[:user].permit(:email, :phone, :role_id, :city, skills_attributes: [:id, :name, :years])
+  # end
 end

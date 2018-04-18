@@ -7,6 +7,7 @@ class JobsController < InheritedResources::Base
   def show
     @job = Job.find(params[:id])
     render json: {success: false, messages: "Job not found!"}, status: 401 unless @job
+    current_user.job_views.create(job_id: @job.id)
     render json: @job.as_json
   end
 
@@ -16,9 +17,19 @@ class JobsController < InheritedResources::Base
     render json: @jobs.as_json
   end
 
+  def recommended_jobs
+    skills = current_user.skills.pluck(:name)
+    jobs = Job.recommended(skills, params[:page]).order('created_at DESC')
+    render json: jobs.as_json
+  end
+
   def applied_jobs
     employee_jobs = current_user.employee_jobs.page(params[:page]).order('created_at DESC')
     render json: employee_jobs.as_json
+  end
+
+  def searches
+    render json: current_user.searches.as_json(only:[:id, :key, :city]).last(10)
   end
 
   def apply

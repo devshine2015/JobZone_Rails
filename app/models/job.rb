@@ -2,15 +2,25 @@ class Job < ApplicationRecord
   belongs_to :user
   belongs_to :company
   has_many :employee_jobs
-  has_many :job_skills
-  has_many :skills, through: :job_skills
+  has_many :skills, as: :skillable
+  has_many :job_views
 
   STATUS = { active: 1, closed: 2}
 
   self.per_page = 10
 
   def self.search(search, page)
-    where("title LIKE ? OR city LIKE ?", "%#{search[:key]}%", "#{search[:city]}%").page(page).order('created_at DESC')
+    joins(:skills).
+    where("title LIKE ? OR city LIKE ? OR skills.name LIKE ?",
+          "%#{search[:key]}%", "#{search[:city]}%", "%#{search[:key]}%"
+        ).page(page)
+        .order('created_at DESC')
+  end
+
+  def self.recommended(skills, page)
+    joins(:skills).
+        where("skills.name IN(?)","#{skills}"
+        ).page(page)
   end
 
   def as_json(options = nil)
@@ -20,6 +30,9 @@ class Job < ApplicationRecord
       include: {
           company: {
               only: [:id, :title]
+          },
+          skills: {
+              only: [:id, :name]
           }
       }
     )

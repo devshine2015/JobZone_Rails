@@ -10,9 +10,12 @@ Rails.application.routes.draw do
   resources :users do
     put :verify
     put :update_language
+    patch :deactivate
     resources :jobs do
       collection do
         get :applied_jobs
+        get :recommended_jobs
+        get :searches
       end
       put :apply
     end
