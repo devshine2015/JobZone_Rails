@@ -8,13 +8,19 @@ class JobsController < InheritedResources::Base
     @job = Job.find(params[:id])
     render json: {success: false, messages: "Job not found!"}, status: 401 unless @job
     current_user.job_views.create(job_id: @job.id)
-    render json: @job.as_json
+    respond_to do |format|
+      format.html { @job || root_path }
+      format.json { render json: @job.as_json }
+    end
   end
 
   def index
     @search = {key: params[:key], city: params[:city]}
     @jobs = Job.search(@search, params[:page])
-    render json: @jobs.as_json
+    respond_to do |format|
+      format.html { @jobs || root_path }
+      format.json { render json: @jobs.as_json }
+    end
   end
 
   def recommended_jobs
