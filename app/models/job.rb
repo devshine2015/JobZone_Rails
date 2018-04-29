@@ -10,11 +10,11 @@ class Job < ApplicationRecord
   self.per_page = 10
 
   def self.search(search, page)
-    joins(:skills).
+    includes(:skills).
     where("title LIKE ? OR city LIKE ? OR skills.name LIKE ?",
           "%#{search[:key]}%", "#{search[:city]}%", "%#{search[:key]}%"
-        ).page(page)
-        .order('created_at DESC')
+        ).references(:skills).page(page)
+        .order('jobs.created_at DESC')
   end
 
   def self.recommended(skills, page)
