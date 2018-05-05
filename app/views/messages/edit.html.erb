@@ -1,0 +1,6 @@
+<h1>Editing Message</h1>
+
+<%= render 'form', message: @message %>
+
+<%= link_to 'Show', job_convesation_message_path(@message.conversation.job, @message.conversation, @message) %> |
+<%= link_to 'Back', job_convesation_messages_path %>

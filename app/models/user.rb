@@ -3,11 +3,15 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
-  # validates :role_id, presence: true
+  validates :role_id, presence: true
   has_many :employee_jobs, foreign_key: 'employee_id'
+  has_many :jobs
+  has_many :employer_conversations, class_name: 'Conversation', foreign_key: 'employer_id'
+  has_many :candidate_conversations, class_name: 'Conversation', foreign_key: 'candidate_id'
   has_many :searches, dependent: :destroy
   has_many :skills, as: :skillable
   has_many :job_views, dependent: :destroy
+  has_many :messages
 
   accepts_nested_attributes_for :skills, allow_destroy: true
 
@@ -33,6 +37,10 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.is_verified = true
     end
+  end
+
+  def has_role? role_id
+    role_id == role_id
   end
 
   # Resets reset password token and send reset password instructions by email.
