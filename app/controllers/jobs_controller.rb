@@ -30,8 +30,11 @@ class JobsController < InheritedResources::Base
   end
 
   def applied_jobs
-    employee_jobs = current_user.employee_jobs.page(params[:page]).order('created_at DESC')
-    render json: employee_jobs.as_json
+    @candidate_jobs = current_user.employee_jobs.page(params[:page]).order('created_at DESC')
+    respond_to do |format|
+      format.html { @candidate_jobs  || root_path }
+      format.json { render json: @candidate_jobs.as_json }
+    end
   end
 
   def searches
@@ -41,9 +44,16 @@ class JobsController < InheritedResources::Base
   def apply
     employee_job = current_user.employee_jobs.new(job_id: @job.id)
     if employee_job.save
-      render json: {success: true, message: "Successfully applied"}, status: 200
+      @job.conversations.create(name: @job.title, candidate_id: employee_job.employee_id, employer_id: @job.user_id)
+      respond_to do |format|
+        format.html { redirect_to applied_jobs_user_jobs_path || root_path }
+        format.json { render json: {success: true, message: "Successfully applied"}, status: 200 }
+      end
     else
-      render json: {success: false, errors: employee_job.errors}, status: 400
+      respond_to do |format|
+        format.html { redirect_to jobs_path || root_path }
+        format.json { render json: {success: false, errors: employee_job.errors}, status: 400 }
+      end
     end
   end
 
@@ -55,7 +65,12 @@ class JobsController < InheritedResources::Base
 
     def get_job
       @job = Job.find(params[:job_id])
-      render json: {success: false, messages: "Job not found!"}, status: 401 unless @job
+      unless @job
+        respond_to do |format|
+          format.html { redirect_to jobs_path || root_path }
+          format.json { render render json: {success: false, messages: "Job not found!"}, status: 401 }
+        end
+      end
     end
 
     def create_employee_searches

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   resources :jobs do
-    resources :convesations do
+    resources :conversations do
       resources :messages
     end
   end
@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     put :verify
     put :update_language
     patch :deactivate
+    get :conversations
     resources :jobs do
       collection do
         get :applied_jobs
@@ -25,7 +26,7 @@ Rails.application.routes.draw do
         get :searches
       end
       put :apply
-      resources :convesations do
+      resources :conversations do
         resources :messages
       end
     end

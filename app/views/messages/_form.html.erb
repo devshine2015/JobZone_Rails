@@ -1,4 +1,4 @@
-<%= form_with(model: message, url:(message.persisted? ? job_convesation_message_url(message) : job_convesation_messages_url), local: true) do |form| %>
+<%= form_with(model: message, url:(message.persisted? ? job_conversation_message_url(message.conversation.job, message.conversation, message) : job_conversation_messages_url), local: true) do |form| %>
   <% if message.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
@@ -19,16 +19,6 @@
   <div class="field">
     <%= form.label :message_type %>
     <%= form.number_field :message_type, id: :message_message_type %>
-  </div>
-
-  <div class="field">
-    <%= form.label :conversation_id %>
-    <%= form.text_field :conversation_id, id: :message_conversation_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id, id: :message_user_id %>
   </div>
 
   <div class="actions">

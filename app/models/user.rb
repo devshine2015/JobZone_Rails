@@ -39,8 +39,12 @@ class User < ApplicationRecord
     end
   end
 
-  def has_role? role_id
-    role_id == role_id
+  def has_role? user_role_id
+    role_id == user_role_id
+  end
+
+  def already_appiled?(job_id)
+    employee_jobs.where(job_id: job_id).first.present?
   end
 
   # Resets reset password token and send reset password instructions by email.
