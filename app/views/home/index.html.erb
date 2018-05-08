@@ -11,9 +11,11 @@
     </div>
     <div class="panel-body">
       <% if user_signed_in? %>
-          <li>
-            <%= link_to('Logout', destroy_user_session_path, method: :delete) %>
-          </li>
+          <li><%= link_to('Logout', destroy_user_session_path, method: :delete) %></li>
+          <li><%= link_to 'Convesations', user_conversations_path(current_user) %></li>
+          <li><%= link_to 'Applied Jobs', applied_jobs_user_jobs_path(current_user) %></li>
+          <li><%= link_to 'All Jobs', user_jobs_path(current_user) %></li>
+          <li><%= link_to 'Recommended Jobs', recommended_jobs_user_jobs_path(current_user) %></li>
       <% else %>
           <li>
             <%= link_to('Login', new_user_session_path)  %>

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :jobs
+
   resources :companies
   devise_for :admin_users, ActiveAdmin::Devise.config
 
@@ -7,10 +7,18 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'home#index'
   ActiveAdmin.routes(self)
+
+  resources :jobs do
+    resources :conversations do
+      resources :messages
+    end
+  end
+
   resources :users do
     put :verify
     put :update_language
     patch :deactivate
+    get :conversations
     resources :jobs do
       collection do
         get :applied_jobs
@@ -18,6 +26,9 @@ Rails.application.routes.draw do
         get :searches
       end
       put :apply
+      resources :conversations do
+        resources :messages
+      end
     end
   end
 end

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Conversations</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Conversation(ID and Title)</th>
+    <th>Job(ID and Title)</th>
+    <th>Candidate(ID and phone)</th>
+    <th>Employer(ID and phone)</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @conversations.each do |conversation| %>
+      <tr>
+        <td>(<%= conversation.id %>, <%= conversation.name %>)</td>
+        <td>(<%= conversation.job.id %>, <%= conversation.job.title %>)</td>
+        <td>(<%= conversation.candidate.id %>, <%= conversation.candidate.phone %>)</td>
+        <td>(<%= conversation.employer.id %>, <%= conversation.employer.phone %>)</td>
+        <td><%= link_to 'Show', job_conversation_messages_path(conversation.job, conversation) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>

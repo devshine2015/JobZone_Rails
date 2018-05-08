@@ -2,6 +2,7 @@ class Job < ApplicationRecord
   belongs_to :user
   belongs_to :company
   has_many :employee_jobs
+  has_many :conversations
   has_many :skills, as: :skillable
   has_many :job_views
 

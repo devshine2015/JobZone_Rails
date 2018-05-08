@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180418212910) do
+ActiveRecord::Schema.define(version: 20180505141424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,17 @@ ActiveRecord::Schema.define(version: 20180418212910) do
     t.index ["user_id"], name: "index_companies_on_user_id"
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.string "name"
+    t.integer "candidate_id"
+    t.integer "employer_id"
+    t.bigint "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidate_id", "employer_id"], name: "index_conversations_on_candidate_id_and_employer_id"
+    t.index ["job_id"], name: "index_conversations_on_job_id"
+  end
+
   create_table "employee_jobs", force: :cascade do |t|
     t.integer "status_id", default: 1
     t.integer "employee_id"
@@ -87,6 +98,17 @@ ActiveRecord::Schema.define(version: 20180418212910) do
     t.string "country"
     t.index ["company_id"], name: "index_jobs_on_company_id"
     t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "message_body"
+    t.integer "message_type"
+    t.bigint "conversation_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "searches", force: :cascade do |t|
@@ -157,11 +179,14 @@ ActiveRecord::Schema.define(version: 20180418212910) do
   end
 
   add_foreign_key "companies", "users"
+  add_foreign_key "conversations", "jobs"
   add_foreign_key "employee_jobs", "jobs"
   add_foreign_key "job_views", "jobs"
   add_foreign_key "job_views", "users"
   add_foreign_key "jobs", "companies"
   add_foreign_key "jobs", "users"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
   add_foreign_key "searches", "users"
   add_foreign_key "user_searches", "users"
 end

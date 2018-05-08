@@ -25,6 +25,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def conversations
+    @conversations = current_user.candidate_conversations.page(params[:page]).order('created_at DESC') if current_user.has_role? User::ROLES[:employee]
+    @conversations = current_user.employer_conversations.page(params[:page]).order('created_at DESC') if current_user.has_role? User::ROLES[:employer]
+    respond_to do |format|
+      format.html { @conversations || root_path }
+      format.json { render json: @conversations.as_json }
+    end
+  end
+
   def update_language
     current_user.update_attribute(:local, params[:new_locale])
     respond_to do |format|

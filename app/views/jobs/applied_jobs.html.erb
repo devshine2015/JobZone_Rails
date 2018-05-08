@@ -16,7 +16,8 @@
   </thead>
 
   <tbody>
-    <% @jobs.each do |job| %>
+    <% @candidate_jobs.each do |candidate_job| %>
+      <%- job = candidate_job.job %>
       <tr>
         <td><%= job.title %></td>
         <td><%= job.city %></td>
@@ -24,13 +25,6 @@
         <td><%= job.description %></td>
         <td><%= job.user %></td>
         <td><%= job.company %></td>
-        <td>
-          <%- if current_user.already_appiled?(job.id) %>
-              Appplied
-          <%- else %>
-              <%= link_to 'Apply', user_job_apply_path(current_user,job), method: :put %>
-          <% end %>
-        </td>
         <td><%= link_to 'Show', job %></td>
         <td><%= link_to 'Edit', edit_job_path(job) %></td>
         <td><%= link_to 'Destroy', job, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Message body:</strong>
+  <%= @message.message_body %>
+</p>
+
+<p>
+  <strong>Message type:</strong>
+  <%= @message.message_type %>
+</p>
+
+<p>
+  <strong>Conversation:</strong>
+  <%= @message.conversation %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @message.user %>
+</p>
+
+<%= link_to 'Edit', edit_job_conversation_message_path(@message.conversation.job, @message.conversation, @message) %> |
+<%= link_to 'Back', job_conversation_messages_path %>
