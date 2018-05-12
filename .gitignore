@@ -16,5 +16,4 @@ log/*
 .env
 .byebug_history
 vendor/*
-Gemfile.lock
 
