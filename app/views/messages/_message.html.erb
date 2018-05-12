@@ -1,0 +1,9 @@
+<tr class="<%= message.user == current_user ? 'bg-info' : '' %>">
+  <td><%= message.message_body %></td>
+  <td><%= message.message_type %></td>
+  <td><%= message.conversation.id %></td>
+  <td><%= message.user.email || message.user.phone %></td>
+  <td><%= link_to 'Show', job_conversation_message_path(message.conversation.job, message.conversation, message) %></td>
+  <td><%= link_to 'Edit', edit_job_conversation_message_path(message.conversation.job, message.conversation, message) %></td>
+  <td><%= link_to 'Destroy', job_conversation_message_path(message.conversation.job, message.conversation, message), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
