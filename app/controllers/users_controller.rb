@@ -35,10 +35,21 @@ class UsersController < ApplicationController
   end
 
   def update_language
-    current_user.update_attribute(:local, params[:new_locale])
-    respond_to do |format|
-      format.html { redirect_to request.referer || root_path }
-      format.json { render json: {success: true} }
+    unless User::LANGUAGES.key?(params[:new_locale].to_s.to_sym)
+      message = "Invalid language!"
+      respond_to do |format|
+        format.html {
+          flash[:alert] = message
+          redirect_to request.referer || root_path
+        }
+        format.json { render json: {success: false, message: message}, status: 401 }
+      end
+    else
+      current_user.update_attribute(:local, params[:new_locale])
+      respond_to do |format|
+        format.html { redirect_to request.referer || root_path }
+        format.json { render json: {success: true} }
+      end
     end
   end
 
