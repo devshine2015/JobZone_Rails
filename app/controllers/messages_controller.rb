@@ -3,8 +3,14 @@ class MessagesController < InheritedResources::Base
   before_action :authenticate_api_user!, if: Proc.new { |c| c.request.format == 'application/json' }
   before_action :get_job
   before_action :get_conversation
+  before_action :validate_message, only: [:show, :update, :destroy]
 
   private
+
+  def validate_message
+    message = Message.where(id: params[:id]).first
+    render json: {success: false, message: "Message not found!"},status: 401 unless message
+  end
 
   def get_job
     if current_user.has_role? User::ROLES[:employee]
