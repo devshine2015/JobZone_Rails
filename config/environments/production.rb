@@ -92,6 +92,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { :protocol => 'http', host: ENV['MAIL_HOST'] }
+  Rails.application.routes.default_url_options[:host] = 'boiling-anchorage-83020.herokuapp.com'
 
   config.action_mailer.delivery_method = :smtp
 

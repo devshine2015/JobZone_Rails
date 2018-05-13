@@ -42,7 +42,8 @@ gem 'sass', '~> 3.4', '>= 3.4.22'
 gem 'activeadmin'
 
 gem "aws-sdk-s3", require: false
-
+gem "mini_magick"
+gem 'image_processing', '~> 1.2'
 # Plus integrations with:
 gem 'cancan' # or cancancan
 gem 'draper'

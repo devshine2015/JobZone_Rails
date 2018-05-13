@@ -2,6 +2,9 @@
 
 <p>
   <strong>Title:</strong>
+  <%- if @company.profile.attachment %>
+      <%= image_tag @company.profile %>
+  <%end%>
   <%= @company.title %>
 </p>
 
