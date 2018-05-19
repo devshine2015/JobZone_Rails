@@ -101,12 +101,12 @@ class UsersController < ApplicationController
   end
 
   def image_io
-    decoded_image = Base64.decode64(params[:company][:image])
+    decoded_image = Base64.decode64(params[:image][:content])
     StringIO.new(decoded_image)
   end
 
   def image_name
-    params[:company][:file_name]
+    params[:image][:file_name]
   end
 
   # def user_params
