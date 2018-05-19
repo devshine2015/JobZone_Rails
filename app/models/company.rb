@@ -10,5 +10,12 @@ class Company < ApplicationRecord
   scope :with_eager_loaded_cover, -> { preload(cover_attachment: :blob) }
   scope :with_preloaded_cover, -> { preload(cover_attachment: :blob) }
 
+  def profile_url
+    profile.attached? ? profile.service_url : "/assets/default.jpg"
+  end
+
+  def cover_url
+    cover.attached? ? cover.service_url : "/assets/default.jpg"
+  end
 
 end

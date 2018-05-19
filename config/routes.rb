@@ -2,7 +2,6 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
-  resources :companies
   devise_for :admin_users, ActiveAdmin::Devise.config
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth' }
@@ -16,11 +15,23 @@ Rails.application.routes.draw do
     end
   end
 
+
+  resources :companies do
+    patch :update_profile
+    patch :update_cover
+  end
+
   resources :users do
     put :verify
     put :update_language
     patch :deactivate
+    patch :update_profile
+    patch :update_cover
     get :conversations
+    resources :companies do
+      patch :update_profile
+      patch :update_cover
+    end
     resources :jobs do
       collection do
         get :applied_jobs

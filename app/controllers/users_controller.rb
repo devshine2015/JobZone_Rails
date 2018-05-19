@@ -72,6 +72,24 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_profile
+    current_user.profile.attach(io: image_io, filename: image_name)
+    if current_user.save
+      render json: { success: true, message: "successfully uploaded!", profile_url: current_user.profile_url}, status: 200
+    else
+      render json: { success: false, errors: current_user.errors }, status: 422
+    end
+  end
+
+  def update_cover
+    current_user.cover.attach(io: image_io, filename: image_name)
+    if current_user.save
+      render json: { success: true, message: "successfully uploaded!", cover_url: current_user.cover_url}, status: 200
+    else
+      render json: { success: false, errors: current_user.errors }, status: 422
+    end
+  end
+
   private
 
   def check_verification
@@ -80,6 +98,15 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :phone, :role_id, :city, skills_attributes: [:id, :name, :_destroy])
+  end
+
+  def image_io
+    decoded_image = Base64.decode64(params[:company][:image])
+    StringIO.new(decoded_image)
+  end
+
+  def image_name
+    params[:company][:file_name]
   end
 
   # def user_params

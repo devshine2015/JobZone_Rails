@@ -13,6 +13,9 @@ class User < ApplicationRecord
   has_many :job_views, dependent: :destroy
   has_many :messages
 
+  has_one_attached :profile
+  has_one_attached :cover
+
   accepts_nested_attributes_for :skills, allow_destroy: true
 
 
@@ -30,6 +33,22 @@ class User < ApplicationRecord
   ROLES = {employer: 1, employee: 2}
 
   LANGUAGES = {en: 1, es: 2, fr: 3}
+
+
+  scope :with_eager_loaded_profile, -> { eager_load(profile_attachment: :blob) }
+  scope :with_preloaded_profile, -> { preload(profile_attachment: :blob) }
+
+  scope :with_eager_loaded_cover, -> { preload(cover_attachment: :blob) }
+  scope :with_preloaded_cover, -> { preload(cover_attachment: :blob) }
+
+
+  def profile_url
+    profile.attached? ? profile.service_url : "/assets/default.jpg"
+  end
+
+  def cover_url
+    cover.attached? ? cover.service_url : "/assets/default.jpg"
+  end
 
   def self.create_from_provider_data(provider_data)
     where(provider: provider_data.provider, uid: provider_data.uid).first_or_create do | user |
@@ -85,7 +104,7 @@ class User < ApplicationRecord
   end
 
   def as_json(options = nil)
-    super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token, :local]}.merge(options || {}))
+    super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token, :local], methods: [:profile_url, :cover_url]}.merge(options || {}))
   end
 
   private
