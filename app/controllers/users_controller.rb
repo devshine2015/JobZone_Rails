@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, if: Proc.new { |c| c.request.format != 'application/json' }
   before_action :authenticate_api_user!, if: Proc.new { |c| c.request.format == 'application/json' }
-  before_action :check_verification, only: :verify
+  before_action :check_verification, only: [:verify, :send_verification_code]
   # before_action :create_skils, only: [:update]
 
   def show
@@ -68,13 +68,19 @@ class UsersController < ApplicationController
     end
   end
 
-  def rsend_verification_code
+  def send_verification_code
     current_user.skip_password_validation = true
-    current_user.rsend_verification_code!
+    current_user.send_user_verification_code!
     if current_user.save
-      render json: {success: true, message: "Verification code sent on your phone!"}, status: 200
+      render json: {
+          success: true,
+          message: "Verification code sent on your phone!",
+          id: current_user.id,
+          phone: current_user.phone,
+          authentication_token: current_user.authentication_token
+      }, status: 200
     else
-      render json: { errors: current_user.errors}
+      render json: { errors: current_user.errors }
     end
   end
 
@@ -122,8 +128,4 @@ class UsersController < ApplicationController
   def image_name
     params[:image][:file_name]
   end
-
-  # def user_params
-  #   params[:user].permit(:email, :phone, :role_id, :city, skills_attributes: [:id, :name, :years])
-  # end
 end

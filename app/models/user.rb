@@ -115,7 +115,7 @@ class User < ApplicationRecord
     super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token, :local], methods: [:profile_url, :cover_url]}.merge(options || {}))
   end
 
-  def rsend_verification_code!
+  def send_user_verification_code!
     send_verification_code
   end
 
@@ -144,7 +144,7 @@ class User < ApplicationRecord
           to: self.phone,
           body: "To reset password, please tap on following link: \n"+
               "jz://resetpassword/#{token} \n"+
-              "https://boiling-anchorage-83020.herokuapp.com/resetPassword/#{token}",
+              "https://boiling-anchorage-83020.herokuapp.com/resetPassword/#{token}"
       )
     rescue Exception => e
       self.errors.add(:base, e.message)
