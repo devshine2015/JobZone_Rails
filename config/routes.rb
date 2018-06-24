@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   resources :users do
     put :verify
+    put :rsend_verification_code
     put :update_language
     patch :deactivate
     patch :update_profile

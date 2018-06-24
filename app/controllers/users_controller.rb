@@ -57,10 +57,24 @@ class UsersController < ApplicationController
     if current_user.verification_code == params[:verification_code]
       current_user.is_verified = true
       current_user.verification_code = ''
-      current_user.save
-      render json: {success: true, message: "Succcessfully verified."}, status: 200
+      current_user.skip_password_validation = true
+      if current_user.save
+        render json: {success: true, message: "Succcessfully verified."}, status: 200
+      else
+        render json: { errors: current_user.errors}
+      end
     else
       render json: {success: false, message: "Invalid verification code."}, status: 401
+    end
+  end
+
+  def rsend_verification_code
+    current_user.skip_password_validation = true
+    current_user.rsend_verification_code!
+    if current_user.save
+      render json: {success: true, message: "Verification code sent on your phone!"}, status: 200
+    else
+      render json: { errors: current_user.errors}
     end
   end
 

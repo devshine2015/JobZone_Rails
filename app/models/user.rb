@@ -3,6 +3,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 
+  attr_accessor :skip_password_validation
+
   validates :role_id, presence: true
   has_many :employee_jobs, foreign_key: 'employee_id'
   has_many :jobs
@@ -79,6 +81,12 @@ class User < ApplicationRecord
     false
   end
 
+  def password_required?
+    return false if new_record?
+    return false if skip_password_validation
+    super
+  end
+
   def will_save_change_to_email?
     false
   end
@@ -107,21 +115,25 @@ class User < ApplicationRecord
     super({ only: [:id, :phone,:email,:provider, :uid, :is_verified, :role_id, :authentication_token, :local], methods: [:profile_url, :cover_url]}.merge(options || {}))
   end
 
+  def rsend_verification_code!
+    send_verification_code
+  end
+
   private
 
   def send_verification_code
     self.verification_code =  1_000_000 + rand(10_000_000 - 1_000_000)
-    begin
-      @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
-      @twilio_client.api.account.messages.create(
-          from: ENV['TWILIO_PHONE_NUMBER'],
-          to: self.phone,
-          body: "Your verification code is #{self.verification_code}."
-      )
-    rescue Exception => e
-      self.errors.add(:base, e.message)
-      raise ActiveRecord::RecordInvalid.new(self)
-    end
+    # begin
+    #   @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
+    #   @twilio_client.api.account.messages.create(
+    #       from: ENV['TWILIO_PHONE_NUMBER'],
+    #       to: self.phone,
+    #       body: "Your verification code is #{self.verification_code}."
+    #   )
+    # rescue Exception => e
+    #   self.errors.add(:base, e.message)
+    #   raise ActiveRecord::RecordInvalid.new(self)
+    # end
   end
 
   def send_reset_password_instructions_message(token)
