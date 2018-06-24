@@ -130,7 +130,9 @@ class User < ApplicationRecord
       @twilio_client.api.account.messages.create(
           from: ENV['TWILIO_PHONE_NUMBER'],
           to: self.phone,
-          body: "Change my password: "+"https://boiling-anchorage-83020.herokuapp.com/resetPassword/#{token}",
+          body: "To reset password, please tap on following link: \n"+
+              "jz://resetpassword/#{token} \n"+
+              "https://boiling-anchorage-83020.herokuapp.com/resetPassword/#{token}",
       )
     rescue Exception => e
       self.errors.add(:base, e.message)
