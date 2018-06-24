@@ -123,17 +123,17 @@ class User < ApplicationRecord
 
   def send_verification_code
     self.verification_code =  1_000_000 + rand(10_000_000 - 1_000_000)
-    # begin
-    #   @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
-    #   @twilio_client.api.account.messages.create(
-    #       from: ENV['TWILIO_PHONE_NUMBER'],
-    #       to: self.phone,
-    #       body: "Your verification code is #{self.verification_code}."
-    #   )
-    # rescue Exception => e
-    #   self.errors.add(:base, e.message)
-    #   raise ActiveRecord::RecordInvalid.new(self)
-    # end
+    begin
+      @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
+      @twilio_client.api.account.messages.create(
+          from: ENV['TWILIO_PHONE_NUMBER'],
+          to: self.phone,
+          body: "Your verification code is #{self.verification_code}."
+      )
+    rescue Exception => e
+      self.errors.add(:base, e.message)
+      raise ActiveRecord::RecordInvalid.new(self)
+    end
   end
 
   def send_reset_password_instructions_message(token)
