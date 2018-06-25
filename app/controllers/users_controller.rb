@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, if: Proc.new { |c| c.request.format != 'application/json' }
   before_action :authenticate_api_user!, if: Proc.new { |c| c.request.format == 'application/json' }
+  before_action :validate_verification!, except: [:verify, :send_verification_code]
+  before_action :validate_email!, only: :update
   before_action :check_verification, only: [:verify, :send_verification_code]
   # before_action :create_skils, only: [:update]
 
@@ -116,8 +118,25 @@ class UsersController < ApplicationController
     render json: {success: false, message: "User already verified."},status: 201 if current_user.is_verified?
   end
 
+  def validate_verification!
+    render json: {success: false, message: "Your account is not verified!"},status: 201 unless current_user.is_verified?
+  end
+
+  def validate_email!
+    unless user_params[:email].present?
+      message = "Email can't be blank!"
+      respond_to do |format|
+        format.html {
+          flash[:error] = message
+          redirect_to request.referer || root_path
+        }
+        format.json { render json: {success: false, messsage: message }, status: 422 }
+      end
+    end
+  end
+
   def user_params
-    params.require(:user).permit(:email, :phone, :role_id, :city, skills_attributes: [:id, :name, :_destroy])
+    params.require(:user).permit(:email, :role_id, :password, :password_confirmation)
   end
 
   def image_io

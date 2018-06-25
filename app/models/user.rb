@@ -22,6 +22,8 @@ class User < ApplicationRecord
 
 
   validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
+  validates_uniqueness_of :email, allow_blank: true, if: :email_changed?
+  validates_format_of :email, with: /\A[\w]([^@\s,;]+)@(([\w-]+\.)+(com|edu|org|net|gov|mil|biz|info))\z/i, allow_blank: true, if: :email_changed?
 
   validates :phone, presence: true, uniqueness: { case_sensitive: false, :allow_blank => true}, numericality: true,
             length: { :minimum => 10, :maximum => 15 }, unless: :social_account?
