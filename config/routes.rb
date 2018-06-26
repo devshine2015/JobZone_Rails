@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   root 'home#index'
   ActiveAdmin.routes(self)
 
+  resources :categories
+
   resources :jobs do
     resources :conversations do
       resources :messages
