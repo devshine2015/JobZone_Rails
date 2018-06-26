@@ -46,6 +46,7 @@ ActiveAdmin.register User do
       role.capitalize if role
     end
     column :provider
+    column :verification_code
     column :is_verified
     column :sign_in_count
     column :last_sign_in_at
