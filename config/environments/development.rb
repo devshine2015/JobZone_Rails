@@ -64,12 +64,12 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
       address: ENV['ADDRESS'],
-      port: 465,
+      port: ENV['SMTP_PORT'],
       domain: ENV['DOMAIN'],
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: ENV['USERNAME'],
-      password: '1r55Uc!27hg6',
+      password: ENV['PASSWORD'],
       ssl: true
   }
 
