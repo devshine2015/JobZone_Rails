@@ -124,7 +124,7 @@ class User < ApplicationRecord
   private
 
   def send_verification_code
-    self.verification_code =  1_000_000 + rand(10_000_000 - 1_000_000)
+    self.verification_code =  1_000 + rand(10_00_0 - 1_000)
     begin
       @twilio_client = Twilio::REST::Client.new ENV['TWILIO_SID'], ENV['TWILIO_TOKEN']
       @twilio_client.api.account.messages.create(
