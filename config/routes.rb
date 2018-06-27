@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     patch :update_profile
     patch :update_cover
     get :conversations
+
+    resources :industries
     resources :companies do
       patch :update_profile
       patch :update_cover

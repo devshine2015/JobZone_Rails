@@ -7,7 +7,6 @@ class Category < ApplicationRecord
   scope :with_eager_loaded_picture, -> { eager_load(picture_attachment: :blob) }
   scope :with_preloaded_picture, -> { preload(picture_attachment: :blob) }
 
-
   def picture_url
     picture.attached? ? picture.service_url : "/assets/default.jpg"
   end
