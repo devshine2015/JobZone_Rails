@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_12_111434) do
+ActiveRecord::Schema.define(version: 2018_06_26_193819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,15 @@ ActiveRecord::Schema.define(version: 2018_05_12_111434) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "title"
+    t.bigint "industry_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["industry_id"], name: "index_categories_on_industry_id"
+    t.index ["title", "industry_id"], name: "index_categories_on_title_and_industry_id"
+  end
+
   create_table "companies", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -88,6 +97,15 @@ ActiveRecord::Schema.define(version: 2018_05_12_111434) do
     t.index ["job_id"], name: "index_conversations_on_job_id"
   end
 
+  create_table "devices", force: :cascade do |t|
+    t.string "device_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["device_id", "user_id"], name: "index_devices_on_device_id_and_user_id"
+    t.index ["user_id"], name: "index_devices_on_user_id"
+  end
+
   create_table "employee_jobs", force: :cascade do |t|
     t.integer "status_id", default: 1
     t.integer "employee_id"
@@ -95,6 +113,13 @@ ActiveRecord::Schema.define(version: 2018_05_12_111434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_employee_jobs_on_job_id"
+  end
+
+  create_table "industries", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_industries_on_title"
   end
 
   create_table "job_views", force: :cascade do |t|
@@ -199,8 +224,10 @@ ActiveRecord::Schema.define(version: 2018_05_12_111434) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "categories", "industries"
   add_foreign_key "companies", "users"
   add_foreign_key "conversations", "jobs"
+  add_foreign_key "devices", "users"
   add_foreign_key "employee_jobs", "jobs"
   add_foreign_key "job_views", "jobs"
   add_foreign_key "job_views", "users"
