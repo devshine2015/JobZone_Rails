@@ -112,6 +112,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def categories_users
+    current_user.categories
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.json { render json: {
+          success: true,
+          user_id: current_user.id,
+          categories: current_user.categories.as_json
+      }, status: 200 }
+    end
+  end
+
   private
 
   def check_verification

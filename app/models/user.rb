@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :skills, as: :skillable
   has_many :job_views, dependent: :destroy
   has_many :messages
+  has_and_belongs_to_many :categories, -> { distinct }
 
   has_one_attached :profile
   has_one_attached :cover

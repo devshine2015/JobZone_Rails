@@ -26,7 +26,7 @@ class Industry < ApplicationRecord
             methods: [:picture_url],
             include: [
                 :categories=>{
-                    only: [:id, :title],
+                    only: [:id, :title, :industry_id],
                     methods: [:picture_url]
                 }
             ]

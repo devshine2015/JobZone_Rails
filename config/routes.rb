@@ -9,8 +9,6 @@ Rails.application.routes.draw do
   root 'home#index'
   ActiveAdmin.routes(self)
 
-  resources :categories
-
   resources :jobs do
     resources :conversations do
       resources :messages
@@ -31,8 +29,12 @@ Rails.application.routes.draw do
     patch :update_profile
     patch :update_cover
     get :conversations
+    get :categories_users
 
     resources :industries
+    resources :categories do
+      put :categories_users
+    end
     resources :companies do
       patch :update_profile
       patch :update_cover
