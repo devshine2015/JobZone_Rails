@@ -124,6 +124,28 @@ class UsersController < ApplicationController
     end
   end
 
+  def categories_industries
+
+    # Update categories preferences
+    categories = Category.where(id: params[:category_ids])
+    current_user.categories.delete_all
+    current_user.industries.delete_all
+    delete_categories = Category.where.not(id: params[:category_ids])
+    categories.each do |category|
+      current_user.categories << category unless current_user.categories.include?(category)
+    end
+
+    #Update industry preferences
+    industries = Industry.where(id: params[:industry_ids])
+    industries.each do |industry|
+      current_user.industries << industry unless current_user.industries.include?(industry)
+    end
+    render json: {
+        categories: current_user.categories.as_json,
+        industries: current_user.industries.as_json
+    }, status: 200
+  end
+
   private
 
   def check_verification

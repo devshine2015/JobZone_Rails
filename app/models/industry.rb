@@ -3,6 +3,7 @@ class Industry < ApplicationRecord
   validates :title, presence: true
   has_many :categories
   has_one_attached :picture
+  has_and_belongs_to_many :users, -> { distinct }
 
   scope :with_eager_loaded_picture, -> { eager_load(picture_attachment: :blob) }
   scope :with_preloaded_picture, -> { preload(picture_attachment: :blob) }

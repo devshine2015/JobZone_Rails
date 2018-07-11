@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     patch :update_cover
     get :conversations
     get :categories_users
+    put :categories_industries
 
     resources :industries
     resources :categories do
