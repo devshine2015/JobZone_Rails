@@ -5,6 +5,10 @@ class User < ApplicationRecord
 
   attr_accessor :skip_password_validation
 
+  ROLES = {employer: 1, employee: 2}
+
+  LANGUAGES = ['en', 'es', 'fr']
+
   validates :role_id, presence: true
   has_many :employee_jobs, foreign_key: 'employee_id'
   has_many :jobs
@@ -16,12 +20,12 @@ class User < ApplicationRecord
   has_many :messages
   has_and_belongs_to_many :categories, -> { distinct }
   has_and_belongs_to_many :industries, -> { distinct }
+  has_one :preferred_job_address, dependent: :destroy
 
   has_one_attached :profile
   has_one_attached :cover
 
-  accepts_nested_attributes_for :skills, allow_destroy: true
-
+  accepts_nested_attributes_for :skills, :preferred_job_address, allow_destroy: true
 
   validates :email, presence: true, uniqueness: {allow_blank: true}, if: :social_account?
   validates_uniqueness_of :email, allow_blank: true, if: :email_changed?
@@ -30,16 +34,13 @@ class User < ApplicationRecord
   validates :phone, presence: true, uniqueness: { case_sensitive: false, :allow_blank => true}, numericality: true,
             length: { :minimum => 10, :maximum => 15 }, unless: :social_account?
 
+  validates_inclusion_of :local, in: LANGUAGES, allow_nil: true, message: "Invalid language!"
+
   devise  :database_authenticatable, :registerable,:token_authenticatable,
           :recoverable, :rememberable, :trackable, :validatable, :timeoutable,
           :omniauthable, omniauth_providers: [:facebook, :google_oauth2],  :authentication_keys => [:phone]
 
   before_save :send_verification_code, if: :new_record?
-
-  ROLES = {employer: 1, employee: 2}
-
-  LANGUAGES = {en: 1, es: 2, fr: 3}
-
 
   scope :with_eager_loaded_profile, -> { eager_load(profile_attachment: :blob) }
   scope :with_preloaded_profile, -> { preload(profile_attachment: :blob) }

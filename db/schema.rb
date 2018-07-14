@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_11_220706) do
+ActiveRecord::Schema.define(version: 2018_07_14_131624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,6 +171,22 @@ ActiveRecord::Schema.define(version: 2018_07_11_220706) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "preferred_job_addresses", force: :cascade do |t|
+    t.string "city"
+    t.string "country"
+    t.decimal "lat"
+    t.decimal "lng"
+    t.boolean "receive_notification", default: false, null: false
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city"], name: "index_preferred_job_addresses_on_city"
+    t.index ["country"], name: "index_preferred_job_addresses_on_country"
+    t.index ["lat"], name: "index_preferred_job_addresses_on_lat"
+    t.index ["lng"], name: "index_preferred_job_addresses_on_lng"
+    t.index ["user_id"], name: "index_preferred_job_addresses_on_user_id"
+  end
+
   create_table "searches", force: :cascade do |t|
     t.text "key"
     t.string "city"
@@ -249,6 +265,7 @@ ActiveRecord::Schema.define(version: 2018_07_11_220706) do
   add_foreign_key "jobs", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
+  add_foreign_key "preferred_job_addresses", "users"
   add_foreign_key "searches", "users"
   add_foreign_key "user_searches", "users"
 end

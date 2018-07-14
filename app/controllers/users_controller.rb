@@ -112,6 +112,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_settings
+    if @current_user.update(setting_params)
+      @current_user
+    else
+      render json: { success: false, errors: @current_user.errors }, status: 422
+    end
+  end
+
   def categories_users
     current_user.categories
     respond_to do |format|
@@ -171,6 +179,10 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :role_id, :password, :password_confirmation)
+  end
+
+  def setting_params
+    params.require(:user).permit(:local, preferred_job_address_attributes: [:id, :city, :country, :lat, :lng, :receive_notification])
   end
 
   def image_io

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     get :conversations
     get :categories_users
     put :categories_industries
+    put :update_settings
 
     resources :industries
     resources :categories do
