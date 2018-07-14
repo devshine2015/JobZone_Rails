@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
 
   def update_language
-    unless User::LANGUAGES.key?(params[:new_locale].to_s.to_sym)
+    unless User::LANGUAGES.include?(params[:new_locale].to_s)
       message = "Invalid language!"
       respond_to do |format|
         format.html {
