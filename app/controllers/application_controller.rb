@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale, if: Proc.new { |c| c.request.format != 'application/json' }
 
-
   def authenticate_api_user!
     id = params[:user_id] || params[:id]
     @current_user = User.where(id: id, authentication_token: request.headers['HTTP_AUTHENTICATION_TOKEN']).first

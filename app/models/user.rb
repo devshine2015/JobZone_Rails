@@ -40,7 +40,7 @@ class User < ApplicationRecord
           :recoverable, :rememberable, :trackable, :validatable, :timeoutable,
           :omniauthable, omniauth_providers: [:facebook, :google_oauth2],  :authentication_keys => [:phone]
 
-  before_save :send_verification_code, if: :new_record?
+  # before_save :send_verification_code, if: :new_record?
 
   scope :with_eager_loaded_profile, -> { eager_load(profile_attachment: :blob) }
   scope :with_preloaded_profile, -> { preload(profile_attachment: :blob) }

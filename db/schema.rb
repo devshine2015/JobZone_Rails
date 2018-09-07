@@ -104,15 +104,6 @@ ActiveRecord::Schema.define(version: 2018_07_14_131624) do
     t.index ["job_id"], name: "index_conversations_on_job_id"
   end
 
-  create_table "devices", force: :cascade do |t|
-    t.string "device_id"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["device_id", "user_id"], name: "index_devices_on_device_id_and_user_id"
-    t.index ["user_id"], name: "index_devices_on_user_id"
-  end
-
   create_table "employee_jobs", force: :cascade do |t|
     t.integer "status_id", default: 1
     t.integer "employee_id"
@@ -215,14 +206,6 @@ ActiveRecord::Schema.define(version: 2018_07_14_131624) do
     t.index ["skillable_type", "skillable_id"], name: "index_skills_on_skillable_type_and_skillable_id"
   end
 
-  create_table "user_searches", force: :cascade do |t|
-    t.text "search"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_user_searches_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "phone", default: "", null: false
@@ -257,7 +240,6 @@ ActiveRecord::Schema.define(version: 2018_07_14_131624) do
   add_foreign_key "categories", "industries"
   add_foreign_key "companies", "users"
   add_foreign_key "conversations", "jobs"
-  add_foreign_key "devices", "users"
   add_foreign_key "employee_jobs", "jobs"
   add_foreign_key "job_views", "jobs"
   add_foreign_key "job_views", "users"
@@ -267,5 +249,4 @@ ActiveRecord::Schema.define(version: 2018_07_14_131624) do
   add_foreign_key "messages", "users"
   add_foreign_key "preferred_job_addresses", "users"
   add_foreign_key "searches", "users"
-  add_foreign_key "user_searches", "users"
 end

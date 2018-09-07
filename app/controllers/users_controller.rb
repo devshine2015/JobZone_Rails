@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   before_action :validate_verification!, except: [:verify, :send_verification_code]
   before_action :validate_email!, only: :update
   before_action :check_verification, only: [:verify, :send_verification_code]
+  # I added
+  
   # before_action :create_skils, only: [:update]
 
   def show
